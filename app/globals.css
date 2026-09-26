@@ -1,0 +1,325 @@
+@import "tailwindcss";
+
+/* Palette drawn from the House of Mahua's logo: deep maroon + marigold gold, on warm ivory. */
+@theme {
+  --color-ivory: #fbf7f0;
+  --color-cream: #f5eee2;
+  --color-sand: #ebe0cd;
+  --color-line: #e5d9c5;
+  --color-ink: #2a1c17;
+  --color-muted: #7b6b60;
+  --color-maroon: #6d0f27;
+  --color-maroon-deep: #45091a;
+  --color-maroon-soft: #f4e4e6;
+  --color-gold: #b5822a;
+  --color-gold-soft: #f3e6c8;
+  --color-marigold: #d9780a;
+  --color-success: #2f6b46;
+  --color-danger: #a3192b;
+}
+
+@theme inline {
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-jost), "Jost", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.005em;
+  }
+  ::selection {
+    background: var(--color-maroon);
+    color: var(--color-ivory);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+  button:not(:disabled),
+  [role="button"],
+  select,
+  summary {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 88rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 1.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 3rem;
+    padding-inline: 1.75rem;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.15s ease,
+      box-shadow 0.25s ease;
+  }
+  .btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--color-maroon);
+    color: var(--color-ivory);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-maroon-deep);
+    box-shadow: 0 6px 18px -8px rgb(69 9 26 / 0.6);
+  }
+  .btn-outline {
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+    background: transparent;
+  }
+  .btn-outline:hover:not(:disabled) {
+    background: var(--color-ink);
+    color: var(--color-ivory);
+  }
+  .btn-light {
+    background: var(--color-ivory);
+    color: var(--color-maroon);
+  }
+  .btn-light:hover:not(:disabled) {
+    background: var(--color-gold-soft);
+  }
+  .btn-ghost {
+    color: var(--color-ink);
+    background: transparent;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--color-sand);
+  }
+  .btn-danger {
+    background: var(--color-danger);
+    color: white;
+  }
+  .btn-danger:hover:not(:disabled) {
+    background: #82111f;
+  }
+  .btn-sm {
+    height: 2.5rem;
+    padding-inline: 1.1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+  .btn-xs {
+    height: 2.1rem;
+    padding-inline: 0.85rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+  }
+  .btn-block {
+    width: 100%;
+  }
+
+  /* ── Form fields ── */
+  .field {
+    width: 100%;
+    height: 3rem;
+    padding-inline: 1rem;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 2px;
+    font-size: 0.95rem;
+    color: var(--color-ink);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  textarea.field {
+    height: auto;
+    padding-block: 0.75rem;
+    line-height: 1.55;
+  }
+  .field::placeholder {
+    color: #b5a898;
+  }
+  .field:hover {
+    border-color: #d3c3a8;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--color-maroon);
+    box-shadow: 0 0 0 3px rgb(109 15 39 / 0.1);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  select.field {
+    appearance: none;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%237b6b60' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+  }
+  .label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .field-error {
+    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    color: var(--color-danger);
+  }
+
+  /* Checkbox / radio accents */
+  input[type="checkbox"].check,
+  input[type="radio"].check {
+    accent-color: var(--color-maroon);
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── Motion (kept subtle, and off for reduced-motion users) ── */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.animate-fade-in {
+  animation: fade-in 0.35s ease both;
+}
+.animate-slide-left {
+  animation: slide-in-left 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.animate-slide-right {
+  animation: slide-in-right 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.animate-slide-up {
+  animation: slide-up 0.32s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.animate-toast {
+  animation: toast-in 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
