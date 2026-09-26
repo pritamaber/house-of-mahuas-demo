@@ -51,8 +51,32 @@ The app uses the local file until Supabase keys are present, then switches autom
 2. SQL Editor → paste `supabase/schema.sql` → Run. (This also creates a public `product-images` storage bucket.)
 3. Copy `.env.example` to `.env.local` and fill in `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`
    (Settings → API). The service-role key is used **server-side only** — never expose it in client code.
-4. Optional: `ALLOW_DEMO_RESET=true npm run db:reset` loads the sample sarees and orders into Supabase.
+4. Run `npm run db:reset -- --yes` once to load the sample sarees and orders into Supabase (it deletes anything already there).
 5. Restart `npm run dev`. Admin → Settings shows which backend is active.
+
+## Deploying to Vercel
+
+**Connect Supabase first.** Vercel's servers can't keep files, so without a database the site can only hold data
+temporarily (per server instance) and orders will vanish. Admin shows a red warning while that's the case.
+
+1. Do the **Switching to Supabase** steps above (create project → run `supabase/schema.sql` → `npm run db:reset -- --yes`
+   with the keys in your local `.env.local`).
+2. In Vercel → your project → **Settings → Environment Variables**, add (Production, and Preview if you use it):
+
+   | Variable | Value |
+   |---|---|
+   | `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Settings → API → Project URL |
+   | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API → service_role / secret key (**never** a `NEXT_PUBLIC_` variable) |
+   | `ADMIN_EMAIL`, `ADMIN_PASSWORD` | the login you'll give the client |
+   | `ADMIN_SECRET` | any long random string |
+   | `NEXT_PUBLIC_WHATSAPP_NUMBER`, `NEXT_PUBLIC_INSTAGRAM_URL` | your real details |
+
+3. **Redeploy** (Deployments → ⋯ → Redeploy). `NEXT_PUBLIC_` values are baked in at build time, so changing them needs a rebuild.
+4. Smoke-test the live site: place an order, sign in to `/admin`, see the order, upload a photo, refresh the page.
+
+Notes: demo deployments are hidden from search engines by default — set `NEXT_PUBLIC_ALLOW_INDEXING=true` when you go live.
+Times always display in India time. Photos larger than a few MB are shrunk in the browser before upload (Vercel rejects
+request bodies over ~4.5 MB).
 
 > The Supabase code path is written against the schema above but has not been run against a live project yet —
 > please give it a quick test (create a product, place an order) before relying on it.

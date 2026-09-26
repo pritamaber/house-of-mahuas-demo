@@ -6,6 +6,29 @@ import { cn } from "@/lib/format";
 
 const MAX_IMAGES = 10;
 const ACCEPT = "image/jpeg,image/png,image/webp,image/avif";
+// Hosts like Vercel reject request bodies over ~4.5 MB, and phone photos are much bigger than that.
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024;
+
+/** Shrinks big photos in the browser before upload (max 2200px, WebP). Falls back to the original. */
+async function shrinkImage(file: File): Promise<File> {
+  if (file.size <= 1_200_000) return file;
+  try {
+    const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+    const scale = Math.min(1, 2200 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return file;
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close();
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.86));
+    if (!blob || blob.size >= file.size) return file;
+    return new File([blob], file.name.replace(/\.[^.]+$/, "") + ".webp", { type: "image/webp" });
+  } catch {
+    return file;
+  }
+}
 
 /**
  * Ordered list of product photos. Uploads go to /api/admin/upload, which stores them (local disk for the
@@ -43,9 +66,14 @@ export function ImageManager({
 
     for (const file of batch) {
       try {
+        const prepared = await shrinkImage(file);
+        if (prepared.size > MAX_UPLOAD_BYTES) {
+          throw new Error(`still ${(prepared.size / 1_048_576).toFixed(1)} MB after shrinking — try a smaller photo`);
+        }
         const body = new FormData();
-        body.append("file", file);
+        body.append("file", prepared);
         const res = await fetch("/api/admin/upload", { method: "POST", body });
+        if (res.status === 413) throw new Error("photo is too large — try a smaller one");
         const data = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
         if (!res.ok || !data.url) throw new Error(data.error || "Upload failed");
         const url = data.url;
@@ -158,7 +186,7 @@ export function ImageManager({
             browse your device
           </button>
         </p>
-        <p className="text-[12.5px] text-muted">JPG, PNG or WebP · up to 12 MB each · the first photo is the main one</p>
+        <p className="text-[12.5px] text-muted">JPG, PNG or WebP · large photos are shrunk automatically · the first photo is the main one</p>
         <input ref={inputRef} type="file" accept={ACCEPT} multiple hidden onChange={(e) => e.target.files && void uploadFiles(e.target.files)} />
       </div>
 

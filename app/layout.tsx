@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
   applicationName: SITE.name,
+  // Keep demo deployments out of search results. Set NEXT_PUBLIC_ALLOW_INDEXING=true when you go live.
+  robots: process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true" ? undefined : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {

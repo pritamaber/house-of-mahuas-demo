@@ -5,7 +5,7 @@ import { ResetDemoButton } from "@/components/admin/reset-demo-button";
 import { requireAdmin, usingDemoCredentials } from "@/lib/auth";
 import { SHIPPING, SITE } from "@/lib/config";
 import { formatINR } from "@/lib/format";
-import { demoResetAllowed, getStore } from "@/lib/store";
+import { demoResetAllowed, getStore, persistenceWarning } from "@/lib/store";
 
 export const metadata: Metadata = { title: "Settings" };
 
@@ -69,8 +69,8 @@ export default async function AdminSettingsPage() {
           <dl className="divide-y divide-line">
             <Row
               label="Database"
-              value={supabase ? "Supabase (Postgres)" : "Local demo database"}
-              hint={supabase ? undefined : "Saved to data/db.json. Add your Supabase keys to .env.local to switch — see the README."}
+              value={supabase ? "Supabase (Postgres)" : persistenceWarning() ? <span className="text-danger">Temporary storage — not saved permanently</span> : "Local demo database"}
+              hint={supabase ? undefined : persistenceWarning() ?? "Saved to data/db.json. Add your Supabase keys to .env.local to switch — see the README."}
             />
             <Row
               label="Image storage"

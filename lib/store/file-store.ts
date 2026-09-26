@@ -1,7 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
-import path from "node:path";
+import { DATA_DIR, DB_FILE } from "../paths";
 import { buildSeedOrderRecord, SEED_ORDERS, SEED_PRODUCTS, seedTimestamps } from "../seed";
 import type { NewOrderRecord, Order, OrderStatus, PaymentStatus, Product, ProductInput } from "../types";
 import { StoreError, type Store } from "./types";
@@ -15,9 +15,6 @@ interface Db {
   products: Product[];
   orders: Order[];
 }
-
-const DATA_DIR = path.join(process.cwd(), "data");
-const DB_FILE = path.join(DATA_DIR, "db.json");
 
 // Stored on globalThis: Next can bundle pages, actions and route handlers as separate module
 // instances, and they must all queue behind the same lock.

@@ -72,7 +72,7 @@ function SidebarContent({ newOrders, onNavigate }: { newOrders: number; onNaviga
   );
 }
 
-export function AdminShell({ newOrders, children }: { newOrders: number; children: React.ReactNode }) {
+export function AdminShell({ newOrders, warning, children }: { newOrders: number; warning?: string | null; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -109,7 +109,14 @@ export function AdminShell({ newOrders, children }: { newOrders: number; childre
         </div>
       )}
 
-      <div className="min-w-0 bg-cream/60">{children}</div>
+      <div className="min-w-0 bg-cream/60">
+        {warning && (
+          <div role="alert" className="border-b border-danger/30 bg-danger px-4 py-3 text-[13.5px] leading-snug text-white sm:px-8">
+            <strong className="font-medium">Not saving permanently.</strong> {warning}
+          </div>
+        )}
+        {children}
+      </div>
     </div>
   );
 }

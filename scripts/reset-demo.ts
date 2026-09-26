@@ -2,17 +2,19 @@
  * Wipes the active database (local JSON demo store, or Supabase when its keys are set)
  * and re-seeds the sample sarees and orders from lib/seed.ts.
  *
- *   npm run db:reset
+ *   npm run db:reset              (local demo store)
+ *   npm run db:reset -- --yes     (required when Supabase keys are set)
  */
 import { getStore } from "../lib/store";
 
 async function main() {
   const store = getStore();
 
-  if (store.kind === "supabase" && process.env.ALLOW_DEMO_RESET !== "true") {
+  const confirmed = process.env.ALLOW_DEMO_RESET === "true" || process.argv.includes("--yes");
+  if (store.kind === "supabase" && !confirmed) {
     console.error(
       "\nThis will DELETE every product and order in your Supabase project.\n" +
-        "If that's what you want, re-run with ALLOW_DEMO_RESET=true set.\n",
+        "If that's what you want, re-run:  npm run db:reset -- --yes\n",
     );
     process.exit(1);
   }

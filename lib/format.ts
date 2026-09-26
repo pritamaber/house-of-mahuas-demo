@@ -29,8 +29,12 @@ export function shippingFor(subtotal: number): number {
   return subtotal >= SHIPPING.freeAbove ? 0 : SHIPPING.fee;
 }
 
-const dateFmt = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" });
-const timeFmt = new Intl.DateTimeFormat("en-IN", { hour: "numeric", minute: "2-digit", hour12: true });
+// Always show India time, whatever timezone the server runs in (Vercel runs in UTC).
+const TZ = "Asia/Kolkata";
+const dateFmt = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: TZ });
+const timeFmt = new Intl.DateTimeFormat("en-IN", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: TZ });
+const IST_OFFSET_MS = 5.5 * 3_600_000;
+const istDay = (d: Date) => Math.floor((d.getTime() + IST_OFFSET_MS) / 86_400_000);
 
 export function formatDate(iso: string): string {
   return dateFmt.format(new Date(iso));
@@ -39,8 +43,7 @@ export function formatDate(iso: string): string {
 /** "Today, 3:42 pm" / "Yesterday" / "12 Sep 2026" */
 export function formatDateRelative(iso: string, now = new Date()): string {
   const d = new Date(iso);
-  const startOfDay = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
-  const diffDays = Math.round((startOfDay(now) - startOfDay(d)) / 86_400_000);
+  const diffDays = istDay(now) - istDay(d);
   if (diffDays === 0) return "Today";
   if (diffDays === 1) return "Yesterday";
   return dateFmt.format(d);

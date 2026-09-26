@@ -3,7 +3,8 @@ import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { createClient } from "@supabase/supabase-js";
-import { supabaseConfigured } from "./store";
+import { UPLOAD_DIR } from "./paths";
+import { supabaseConfigured, supabaseEnv } from "./store";
 
 /**
  * Product image storage.
@@ -12,13 +13,13 @@ import { supabaseConfigured } from "./store";
  * Callers only ever deal in URL strings, so switching backends needs no other change.
  */
 
-export const UPLOAD_DIR = path.join(process.cwd(), "data", "uploads");
+export { UPLOAD_DIR };
 const BUCKET = process.env.SUPABASE_STORAGE_BUCKET || "product-images";
 
 function supabase() {
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.SUPABASE_SERVICE_ROLE_KEY as string, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+  const env = supabaseEnv();
+  if (!env) throw new Error("Supabase is not configured");
+  return createClient(env.url, env.key, { auth: { persistSession: false, autoRefreshToken: false } });
 }
 
 export async function storeImage(data: Buffer, ext = "webp", contentType = "image/webp"): Promise<string> {
