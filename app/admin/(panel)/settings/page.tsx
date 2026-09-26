@@ -84,7 +84,7 @@ export default async function AdminSettingsPage() {
 
       <Card title="Demo tools">
         <p className="mb-5 max-w-2xl text-[14.5px] text-muted">
-          Testing made a mess? Restore the original 15 sample sarees and 6 sample orders. Anything you added or changed is removed.
+          Testing made a mess? Restore the original sample sarees and orders. Anything you added or changed is removed.
         </p>
         {demoResetAllowed() ? (
           <ResetDemoButton />

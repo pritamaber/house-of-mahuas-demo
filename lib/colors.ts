@@ -29,6 +29,12 @@ const PALETTES: Record<string, Palette> = {
   grey: { base: "#9a9aa2", deep: "#7c7c86", accent: "#2f2f3a", motif: "#f0f0f4" },
   navy: { base: "#16224a", deep: "#0d1631", accent: "#c99a3b", motif: "#e6c36a" },
   brown: { base: "#6b4630", deep: "#4c3020", accent: "#d9a441", motif: "#e9c98a" },
+  plum: { base: "#6a2a5e", deep: "#4a1c42", accent: "#c8b6cf", motif: "#e4d3ea" },
+  lilac: { base: "#c9b0d6", deep: "#ad8fbe", accent: "#7a3f8f", motif: "#f5ecf8" },
+  mauve: { base: "#b78f98", deep: "#9c7079", accent: "#f4e9ea", motif: "#fbf3f3" },
+  olive: { base: "#7d6b28", deep: "#5b4d17", accent: "#211a14", motif: "#e6c36a" },
+  coral: { base: "#ef7d6c", deep: "#d75f4f", accent: "#e2b85a", motif: "#f7d788" },
+  marigold: { base: "#f2a90a", deep: "#d18b00", accent: "#7cc3e0", motif: "#7b4a12" },
 };
 
 const FALLBACK: Palette = { base: "#a89785", deep: "#8a7866", accent: "#5a1a2a", motif: "#f3e7d3" };

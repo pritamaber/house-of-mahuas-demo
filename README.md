@@ -8,7 +8,7 @@ npm install
 npm run dev        # http://localhost:3000
 ```
 
-It works immediately, with no accounts or keys: it ships with 15 sample sarees and 6 sample orders, and stores
+It works immediately, with no accounts or keys: it ships with 16 sample sarees (using your photos) and 6 sample orders, and stores
 everything in a local file (`data/db.json`).
 
 | | |

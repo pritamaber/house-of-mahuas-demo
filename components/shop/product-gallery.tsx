@@ -33,7 +33,7 @@ export function ProductGallery({ product }: { product: Product }) {
   return (
     <div className="flex flex-col-reverse gap-3 lg:flex-row lg:gap-4">
       {slides.length > 1 && (
-        <div className="flex gap-2.5 overflow-x-auto scrollbar-none lg:w-[84px] lg:shrink-0 lg:flex-col lg:overflow-visible" role="tablist" aria-label="Product images">
+        <div className="flex gap-2.5 overflow-x-auto scrollbar-none lg:w-[72px] lg:shrink-0 lg:flex-col lg:overflow-visible" role="tablist" aria-label="Product images">
           {slides.map((s, i) => (
             <button
               key={`${s.label}-${i}`}
